@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#like-btn").click(function() {
+                // Code pour mettre à jour les likes (comme auparavant)
+            });
+
+            $("#comment-btn").click(function() {
+                var comment = $("#comment-input").val();
+
+                $.ajax({
+                    url: "/comment/{{ photo_data['id'] }}",
+                    type: "POST",
+                    data: {comment: comment},
+                    success: function(data) {
+                        // Mettre à jour les commentaires affichés
+                        $("#comment-section").append('<p>' + data.comment + '</p>');
+                        $("#comment-input").val('');  // Effacer le champ de saisie de commentaire
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Uploaded Photo</h1>
+    {% if 'file_name' in photo_data %}
+    <img src="{{ url_for('static', filename='uploads/' + photo_data['file_name']) }}" alt="Uploaded"><br>
+    <br>
+
+
+        <div>
+            <button id="like-btn">J'aime</button>
+            <span id="like-count">{{ photo_data['likes'] }}</span> likes
+        </div>
+        <div id="comment-section"> 
+            {% for comment in photo_data['comments'] %}
+                <p>{{ comment }}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <input type="text" id="comment-input">
+            <button id="comment-btn">Commenter</button>
+        </div>
+    {% else %}
+        <p>Photo not found</p>
+    {% endif %}
+</body>
+</html>
