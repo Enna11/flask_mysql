@@ -31,6 +31,25 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def execute_sql_file(filename):
+    # Lire le contenu du fichier SQL
+    with open(filename, 'r') as file:
+        sql_file = file.read()
+
+    # Exécuter les commandes SQL dans le fichier
+    cursor = mysql.connection.cursor()
+    for command in sql_file.split(';'):
+        cursor.execute(command)
+    mysql.connection.commit()
+    cursor.close()
+
+@app.route('/initialize', methods=['GET'])
+def initialize_database():
+    # Exécuter le fichier SQL pour créer les tables
+    execute_sql_file('databases.sql')
+    flash('Database initialized successfully!')
+    return redirect(url_for('login'))
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
