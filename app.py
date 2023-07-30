@@ -3,7 +3,9 @@ from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
-
+from base64 import b64encode, b64decode
+import base64
+from flask_session import Session  # Importez l'extension Flask Session
 
 app = Flask(__name__)
 app.secret_key = "caircocoders-ednalan"
@@ -16,6 +18,10 @@ app.config['MYSQL_DB'] = 'enameli'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
+# Configuration de Flask Session
+app.config['SESSION_PERMANENT'] = False  # Permet aux sessions de ne pas être permanentes
+app.config['SESSION_TYPE'] = 'filesystem'  # Stocke les sessions dans le système de fichiers
+Session(app)  # Initialisez l'extension Flask Session
 
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
@@ -27,8 +33,6 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if 'user_id' in session:
-        return redirect('/wall')
 
     return redirect('/login')
 
@@ -44,11 +48,11 @@ def login():
         cursor.close()
 
         if user:
-            session['user_id'] = user['id']
-            session['user_name'] = user['name']
+            session['user_id'] = user['id']  # Stocker l'ID de l'utilisateur dans la session
+            session['user_first_name'] = user['first_name']
             return redirect('/wall')
         else:
-            flash('Invalid email or password')
+            flash('Email ou mot de passe invalide')
             return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -56,14 +60,15 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        name = request.form['name']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
         email = request.form['email']
         password = request.form['password']
         gender = request.form['gender']
         dob = request.form['dob']
 
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO users (name, email, password, gender, dob) VALUES (%s, %s, %s, %s, %s)", (name, email, password, gender, dob))
+        cursor.execute("INSERT INTO users (first_name, last_name, email, password, gender, dob) VALUES (%s, %s, %s, %s, %s, %s)", (first_name, last_name, email, password, gender, dob))
         mysql.connection.commit()
         cursor.close()
 
@@ -81,6 +86,12 @@ def wall():
         cursor.execute("SELECT * FROM images")
         photos = cursor.fetchall()
         cursor.close()
+
+        for photo in photos:
+            # Récupérer l'image en tant que base64
+            if 'image_data' in photo:
+                image_data = photo['image_data']
+                photo['image_data'] = base64.b64encode(image_data).decode('utf-8')
 
         return render_template('wall.html', photos=photos)
     else:
@@ -114,6 +125,7 @@ def upload():
                 flash('File successfully uploaded')
 
                 # Enregistrement de l'image dans le dossier "static/uploads"
+                file.stream.seek(0)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
                 return redirect(url_for('wall'))
@@ -125,6 +137,7 @@ def upload():
     else:
         return redirect(url_for('login'))
     
+
 @app.route('/photo/<int:photo_id>', methods=['GET'])
 def show_photo(photo_id):
     cursor = mysql.connection.cursor()
@@ -132,10 +145,15 @@ def show_photo(photo_id):
     photo_data = cursor.fetchone()
     cursor.close()
 
-    if photo_data and 'file_name' in photo_data:
+    if photo_data and 'image_data' in photo_data:
+        # Récupérer l'image en tant que base64
+        image_data = photo_data['image_data']
+        photo_data['image_data'] = base64.b64encode(image_data).decode('utf-8')
+
         return render_template('photo.html', photo_data=photo_data)
     else:
         return "Photo not found"
+
 
 @app.route('/like/<int:image_id>', methods=['POST'])
 def like_image(image_id):
@@ -155,9 +173,10 @@ def like_image(image_id):
 def comment_image(image_id):
     if 'user_id' in session:
         comment = request.form.get('comment')
-
+        user_id = session['user_id']  # Récupérer l'ID de l'utilisateur à partir de la session
+        user_first_name = session ['user_first_name']
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO comments (image_id, user_id, comment) VALUES (%s, %s, %s)", (image_id, session['user_id'], comment))
+        cursor.execute("INSERT INTO comments (image_id, user_id, comment) VALUES (%s, %s, %s)", (image_id, user_id, comment))
         mysql.connection.commit()
         cursor.close()
 

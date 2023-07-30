@@ -3,21 +3,67 @@
 <head>
     <title>Register</title>
     <link rel="stylesheet" type="text/css" href="static/uploads/css/style.css">
+    <style>
+        /* Styles pour les boutons */
+        input[type="submit"] {
+            background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            animation: flash 1s linear;
+        }
+
+        /* Animation de couleur flash */
+        @keyframes flash {
+            0% {
+                background-color: transparent;
+            }
+            50% {
+                background-image: linear-gradient(163deg, #00642f 0%, #13034b 100%);
+            }
+            100% {
+                background-color: transparent;
+            }
+        }
+
+        /* Styles pour les mots "Last Name", "First Name", "Email", "Gender", "Date of Birth" et "Password" */
+        label {
+            background-image: linear-gradient(163deg, #a76da2 0%, #d1cfcb 100%);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+        #heading {
+  text-align: center;
+  margin: 1em;
+  color: rgb(230, 121, 225);
+  font-size: 2em;
+}
+    </style>
 </head>
 <body>
-    <h1>Register</h1>
+   
     <form method="POST" action="/register" class="form register-form">
+        <div id="heading">Register</div>
         <label for="first-name">First Name:</label>
-        <input type="text" id="first-name" name="first_name" required><br>
+        <input type="text" id="first-name" name="first_name" required>
 
         <label for="last-name">Last Name:</label>
-        <input type="text" id="last-name" name="last_name" required><br>
+        <input type="text" id="last-name" name="last_name" required>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br>
+        <input type="email" id="email" name="email" required>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+        <input type="password" id="password" name="password" required>
 
         <label for="gender">Gender:</label>
         <select id="gender" name="gender">
@@ -26,7 +72,7 @@
         </select><br>
 
         <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required><br>
+        <input type="date" id="dob" name="dob" required>
 
         <input type="submit" value="Register">
     </form>

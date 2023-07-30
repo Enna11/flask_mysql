@@ -5,7 +5,7 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background: linear-gradient(180deg, #171717 0%, #000000 100%);
+  background: linear-gradient(180deg, #14030c 0%, #4b123a 100%);
 }
 
 .form {
@@ -15,18 +15,22 @@ body {
   padding-left: 2em;
   padding-right: 2em;
   padding-bottom: 0.4em;
-  background-color: #171717;
+  background-color: #1d0612;
   border-radius: 20px;
   max-width: 400px;
   width: 100%;
   box-sizing: border-box;
+  
+  /* Couleur de la bordure et épaisseur */
+  border: 2px solid #acdff7;
 }
+
 
 #heading {
   text-align: center;
   margin: 2em;
-  color: rgb(0, 255, 200);
-  font-size: 1.2em;
+  color: rgb(230, 121, 225);
+  font-size: 2em;
 }
 
 .field {
@@ -39,14 +43,14 @@ body {
   border: none;
   outline: none;
   color: white;
-  background-color: #171717;
-  box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+  background-color: #f1e8e8;
+  box-shadow: inset 2px 5px 10px rgb(77, 43, 66);
 }
 
 .input-icon {
   height: 1.3em;
   width: 1.3em;
-  fill: rgb(0, 255, 200);
+  fill: rgb(18, 83, 69);
 }
 
 .input-field {
@@ -54,7 +58,7 @@ body {
   border: none;
   outline: none;
   width: 100%;
-  color: rgb(0, 255, 200);
+  color: rgb(16, 19, 18);
 }
 
 .form .btn {
@@ -79,7 +83,7 @@ body {
 
 .button1:hover {
   background-image: linear-gradient(163deg, #00642f 0%, #13034b 100%);
-  color: rgb(0, 255, 200);
+  color: rgb(17, 17, 17);
 }
 
 .button2 {
@@ -91,12 +95,12 @@ body {
   outline: none;
   transition: .4s ease-in-out;
   background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
-  color: rgb(0, 0, 0);
+  color: rgb(13, 13, 14);
 }
 
 .button2:hover {
   background-image: linear-gradient(163deg, #00642f 0%, #13034b 100%);
-  color: rgb(0, 255, 200);
+  color: rgb(20, 20, 20);
 }
 
 .button3 {
@@ -107,7 +111,7 @@ body {
   outline: none;
   transition: .4s ease-in-out;
   background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
-  color: rgb(0, 0, 0);
+  color: rgb(233, 228, 228);
 }
 
 .button3:hover {
@@ -132,7 +136,7 @@ body {
 }
 
 .card:hover {
-  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.30);
+  box-shadow: 0px 0px 30px 1px #eee6e9;
 }
 
 /* Animation de couleur flash */

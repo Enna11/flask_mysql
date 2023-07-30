@@ -5,144 +5,150 @@
     <style>
         /* Styles spécifiques pour la page Wall */
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(180deg, #171717 0%, #000000 100%);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        
-        h3 {
-            text-align: center;
-            color: #666;
-        }
-        
-        a {
-            display: block;
-            text-align: center;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            width: 150px;
-        }
-        
-        div {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        h3 {
-            color: #333;
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-            margin: 10px 0;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        button {
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        span {
-            font-weight: bold;
-        }
-        
-        #comment-section {
-            margin-top: 10px;
-        }
-        
-        #comment-section p {
-            margin: 5px 0;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        
-        .button-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(180deg, #14030c 0%, #4b123a 100%);
+}
+
+h1, h3 {
+    text-align: center;
+    color: #fff;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    padding: 20px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    width: 150px;
+    
+}
+
+.photo-container {
+    background-color: #fff;
+    padding: 100px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    color: #333;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 10px auto; /* Modifié pour centrer les images horizontalement */
+    display: block; /* Permet de supprimer l'espace réservé aux caractères sous les images */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+span {
+    font-weight: bold;
+}
+
+#comment-section {
+    margin-top: 10px;
+}
+
+#comment-section p {
+    margin: 5px 0;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
     </style>
 </head>
 <body>
     <h1>Welcome to the Wall</h1>
-    <h3>Hello, {{ session['user_name'] }}!</h3>
+    <h3>Hello, {{ session['user_first_name'] }}!</h3>
     
     <a href="/upload">Upload a Photo</a>
 
     {% for photo in photos %}
-        <div>
-            <h3>Photo ID: {{ photo['id'] }}</h3>
-            <img src="{{ url_for('static', filename='uploads/' + photo['file_name']) }}" alt="Photo"><br>
-<br>
+        <div class="photo-container">
+          
+            <img src="data:image/{{ photo['file_name'].split('.')[-1] }};base64,{{ photo['image_data'] }}" alt="Photo">
             <br>
-            <button id="like-btn-{{ photo['id'] }}">Like</button>
-            <span id="like-count-{{ photo['id'] }}">{{ photo['likes'] }}</span> likes<br>
+            <br>
+            <button class="like-btn" data-photo-id="{{ photo['id'] }}">J'aime</button>
 
-            <div id="comment-section-{{ photo['id'] }}">
+            <span class="like-count" id="like-count-{{ photo['id'] }}">{{ photo['likes'] }}</span> likes<br>
+
+            <div class="comment-section" id="comment-section-{{ photo['id'] }}">
                 {% for comment in photo['comments'] %}
                     <p>{{ comment['comment'] }}</p>
                 {% endfor %}
             </div>
 
-            <input type="text" id="comment-input-{{ photo['id'] }}">
-            <button id="comment-btn-{{ photo['id'] }}">Comment</button>
+            <div class="comment-container">
+                <input type="text" class="comment-input" id="comment-input-{{ photo['id'] }}">
+                <div class="button-container">
+                    <button class="comment-btn" data-photo-id="{{ photo['id'] }}">Commenter</button>
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-                $(document).ready(function() {
-                    $("#like-btn-{{ photo['id'] }}").click(function() {
-                        $.ajax({
-                            url: "/like/{{ photo['id'] }}",
-                            type: "POST",
-                            success: function(data) {
-                                $("#like-count-{{ photo['id'] }}").text(data.likes);
-                            }
-                        });
-                    });
-
-                    $("#comment-btn-{{ photo['id'] }}").click(function() {
-                        var comment = $("#comment-input-{{ photo['id'] }}").val();
-
-                        $.ajax({
-                            url: "/comment/{{ photo['id'] }}",
-                            type: "POST",
-                            data: {comment: comment},
-                            success: function(data) {
-                                $("#comment-section-{{ photo['id'] }}").append('<p>' + data.comment + '</p>');
-                                $("#comment-input-{{ photo['id'] }}").val('');
-                            }
-                        });
-                    });
-                });
-            </script>
+                </div>
+            </div>
         </div>
     {% endfor %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".like-btn").click(function() {
+                var photoId = $(this).attr("data-photo-id");
+                $.ajax({
+                    url: "/like/" + photoId,
+                    type: "POST",
+                    success: function(data) {
+                        $("#like-count-" + photoId).text(data.likes);
+                    }
+                });
+            });
+
+            $(".comment-btn").click(function() {
+                var photoId = $(this).attr("data-photo-id");
+                var comment = $("#comment-input-" + photoId).val();
+
+                $.ajax({
+                    url: "/comment/" + photoId,
+                    type: "POST",
+                    data: { comment: comment },
+                    success: function(data) {
+                        $("#comment-section-" + photoId).append('<p>' + data.comment + '</p>');
+                        $("#comment-input-" + photoId).val('');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
