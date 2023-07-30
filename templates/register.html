@@ -35,7 +35,7 @@
 
         /* Styles pour les mots "Last Name", "First Name", "Email", "Gender", "Date of Birth" et "Password" */
         label {
-            background-image: linear-gradient(163deg, #a76da2 0%, #d1cfcb 100%);
+            background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
             color: #fff;
             padding: 5px 10px;
             border-radius: 5px;
@@ -44,7 +44,7 @@
         #heading {
   text-align: center;
   margin: 1em;
-  color: rgb(230, 121, 225);
+  color: rgb(255, 255, 225);
   font-size: 2em;
 }
     </style>
@@ -53,25 +53,25 @@
    
     <form method="POST" action="/register" class="form register-form">
         <div id="heading">Register</div>
-        <label for="first-name">First Name:</label>
+        <label for="first-name">First Name</label>
         <input type="text" id="first-name" name="first_name" required>
 
-        <label for="last-name">Last Name:</label>
+        <label for="last-name">Last Name</label>
         <input type="text" id="last-name" name="last_name" required>
 
-        <label for="email">Email:</label>
+        <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
 
-        <label for="password">Password:</label>
+        <label for="password">Password</label>
         <input type="password" id="password" name="password" required>
 
-        <label for="gender">Gender:</label>
+        <label for="gender">Gender</label>
         <select id="gender" name="gender">
             <option value="male">Male</option>
             <option value="female">Female</option>
         </select><br>
 
-        <label for="dob">Date of Birth:</label>
+        <label for="dob">Date of Birth</label>
         <input type="date" id="dob" name="dob" required>
 
         <input type="submit" value="Register">

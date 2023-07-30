@@ -2,125 +2,120 @@
 <html>
 <head>
     <title>Wall</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         /* Styles spécifiques pour la page Wall */
         body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: linear-gradient(180deg, #14030c 0%, #4b123a 100%);
-}
+            background: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+        }
 
-h1, h3 {
-    text-align: center;
-    color: #fff;
-}
+        h1, h3 {
+            text-align: center;
+            color: #fff;
+            padding: 20px 0;
+        }
 
-a {
-    display: block;
-    text-align: center;
-    margin: 20px auto;
-    padding: 20px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    width: 150px;
-    
-}
+        a {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 150px;
+        }
 
-.photo-container {
-    background-color: #fff;
-    padding: 100px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .photo-container {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-h3 {
-    color: #333;
-}
 
-img {
-    max-width: 100%;
-    height: auto;
-    margin: 10px auto; /* Modifié pour centrer les images horizontalement */
-    display: block; /* Permet de supprimer l'espace réservé aux caractères sous les images */
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
 
-button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-span {
-    font-weight: bold;
-}
+        .like-btn, .comment-btn {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-#comment-section {
-    margin-top: 10px;
-}
+        .like-count, .comment-section p {
+            margin: 5px 0;
+        }
 
-#comment-section p {
-    margin: 5px 0;
-}
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-input[type="text"] {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.button-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
+        .button-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to the Wall</h1>
-    <h3>Hello, {{ session['user_first_name'] }}!</h3>
-    
-    <a href="/upload">Upload a Photo</a>
+    <div class="container">
+        <h1>Welcome to the Wall</h1>
+        <h3>Hello, {{ session['user_first_name'] }}!</h3>
 
-    {% for photo in photos %}
-        <div class="photo-container">
-          
-            <img src="data:image/{{ photo['file_name'].split('.')[-1] }};base64,{{ photo['image_data'] }}" alt="Photo">
-            <br>
-            <br>
-            <button class="like-btn" data-photo-id="{{ photo['id'] }}">J'aime</button>
+        <a href="/upload">Upload a Photo</a>
+        <a href="/logout" class="logout-btn">Logout</a>
+        {% for photo in photos %}
+            <div class="photo-container">
+                <img  src="data:image/{{ photo['file_name'].split('.')[-1] }};base64,{{ photo['image_data'] }}" alt="Photo">
+                <br>
+                <br>
+                <button class="like-btn" data-photo-id="{{ photo['id'] }}">J'aime</button>
+                <span class="like-count" id="like-count-{{ photo['id'] }}">{{ photo['likes'] }}</span> likes<br>
 
-            <span class="like-count" id="like-count-{{ photo['id'] }}">{{ photo['likes'] }}</span> likes<br>
+                <div class="comment-section" id="comment-section-{{ photo['id'] }}">
+                    {% for comment in photo['comments'] %}
+                        <p>{{ comment['comment'] }}</p>
+                    {% endfor %}
+                </div>
 
-            <div class="comment-section" id="comment-section-{{ photo['id'] }}">
-                {% for comment in photo['comments'] %}
-                    <p>{{ comment['comment'] }}</p>
-                {% endfor %}
-            </div>
-
-            <div class="comment-container">
-                <input type="text" class="comment-input" id="comment-input-{{ photo['id'] }}">
-                <div class="button-container">
-                    <button class="comment-btn" data-photo-id="{{ photo['id'] }}">Commenter</button>
-
+                <div class="comment-container">
+                    <input type="text" class="comment-input" id="comment-input-{{ photo['id'] }}">
+                    <div class="button-container">
+                        <button class="comment-btn" data-photo-id="{{ photo['id'] }}">Commenter</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
             $(".like-btn").click(function() {

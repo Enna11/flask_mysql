@@ -5,7 +5,22 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background: linear-gradient(180deg, #14030c 0%, #4b123a 100%);
+  background: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 1.5em;
+  color: white; /* Set the color to white */
+}
+
+.signup-link a {
+  color: #00ff75;
+  text-decoration: none; /* Remove underline from the link */
+}
+
+.signup-link a:hover {
+  text-decoration: underline; /* Add underline on hover (optional) */
 }
 
 .form {
@@ -15,7 +30,7 @@ body {
   padding-left: 2em;
   padding-right: 2em;
   padding-bottom: 0.4em;
-  background-color: #1d0612;
+  background-color: #16537e;
   border-radius: 20px;
   max-width: 400px;
   width: 100%;
@@ -29,7 +44,7 @@ body {
 #heading {
   text-align: center;
   margin: 2em;
-  color: rgb(230, 121, 225);
+  color: rgb(255, 255, 225);
   font-size: 2em;
 }
 
@@ -78,7 +93,7 @@ body {
   outline: none;
   transition: .4s ease-in-out;
   background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
 }
 
 .button1:hover {

@@ -183,6 +183,15 @@ def comment_image(image_id):
         return jsonify({'comment': comment})
     else:
         return redirect(url_for('login'))
+@app.route('/logout')
+def logout():
+    # Supprimer toutes les données de la session de l'utilisateur
+    session.pop('user_id', None)
+    session.pop('user_first_name', None)
+    
+    flash('You have been successfully logged out.')
+    return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
