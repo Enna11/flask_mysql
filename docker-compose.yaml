@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  flask-app:
+    image: flask-app:1.0
+    ports:
+      - "5002:5000"
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"  # Corrected the port mapping here
+
+    environment:
+      MYSQL_ROOT_PASSWORD: iddirena
+      MYSQL_DATABASE: enameli
