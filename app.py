@@ -12,8 +12,8 @@ app.secret_key = "caircocoders-ednalan"
 
 # Configuration de la base de données MySQL
 app.config['MYSQL_HOST'] = 'mysqldb'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'iddirena'
+app.config['MYSQL_USER'] = 'enna'
+app.config['MYSQL_PASSWORD'] = 'poiuytre'
 app.config['MYSQL_DB'] = 'enameli'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
