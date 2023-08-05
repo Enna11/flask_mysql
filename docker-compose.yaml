@@ -23,9 +23,6 @@ services:
       MYSQL_DATABASE: enameli
       MYSQL_USER: enna
       MYSQL_PASSWORD: poiuytre
-
-    volumes:
-      - ./mysql_data:/var/lib/mysql 
     networks:
       - app-net
 
@@ -36,8 +33,6 @@ services:
       - mysqldb:db
     ports:
       - "8080:80"
-    volumes:
-      - ./phpmyadmin_data:/var/lib/phpmyadmin/tmp
     networks:
       - app-net
 
