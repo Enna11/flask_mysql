@@ -25,5 +25,5 @@ jobs:
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
       
     - name: Push Docker image
-      run: docker push ena11/demo-app:latest
+      run: docker push ena11/demo-app:1.1
 
