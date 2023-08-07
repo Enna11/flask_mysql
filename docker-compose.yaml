@@ -3,7 +3,7 @@ version: '3.8'
 services:
   flask-app:
     container_name: flask-app
-    image: flask-app:1.0
+    image: flask-app:1.1
     environment:
       MYSQL_DATABASE: enameli
       MYSQL_USER: enna
@@ -17,7 +17,7 @@ services:
     container_name: mysqldb
     image: mysql:latest
     ports:
-      - "3306:3306"  # Corrected the port mapping here
+      - "3306:3306"  
     environment:
       MYSQL_ROOT_PASSWORD: iddirena
       MYSQL_DATABASE: enameli

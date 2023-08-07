@@ -19,12 +19,11 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # Configuration de Flask Session
-app.config['SESSION_PERMANENT'] = False  # Permet aux sessions de ne pas être permanentes
-app.config['SESSION_TYPE'] = 'filesystem'  # Stocke les sessions dans le système de fichiers
-Session(app)  # Initialisez l'extension Flask Session
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
@@ -52,14 +51,13 @@ def initialize_database():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-
     return redirect('/login')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form['Adresse e-mail']
+        password = request.form['mot de passe']
 
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email, password))
@@ -67,7 +65,7 @@ def login():
         cursor.close()
 
         if user:
-            session['user_id'] = user['id']  # Stocker l'ID de l'utilisateur dans la session
+            session['user_id'] = user['id']
             session['user_first_name'] = user['first_name']
             return redirect('/wall')
         else:
@@ -79,11 +77,11 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        email = request.form['email']
-        password = request.form['password']
-        gender = request.form['gender']
+        first_name = request.form['prénom']
+        last_name = request.form['nom de famille']
+        email = request.form['Adresse e-mail']
+        password = request.form['mot de passe']
+        gender = request.form['Genre']
         dob = request.form['dob']
 
         cursor = mysql.connection.cursor()
@@ -107,7 +105,6 @@ def wall():
         cursor.close()
 
         for photo in photos:
-            # Récupérer l'image en tant que base64
             if 'image_data' in photo:
                 image_data = photo['image_data']
                 photo['image_data'] = base64.b64encode(image_data).decode('utf-8')
@@ -136,53 +133,24 @@ def upload():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
 
-                # Enregistrement de l'image en tant que BLOB dans la base de données
                 image_blob = file.read()
                 cursor.execute("INSERT INTO images (file_name, image_data, uploaded_on) VALUES (%s, %s, %s)", [filename, image_blob, now])
                 mysql.connection.commit()
                 cursor.close()
-                flash('File successfully uploaded')
-
-                # Enregistrement de l'image dans le dossier "static/uploads"
-                file.stream.seek(0)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-                return redirect(url_for('wall'))
-            else:
-                flash('Invalid file format')
-                return redirect('/upload')
+                flash('File uploaded successfully')
+                return redirect('/wall')
 
         return render_template('upload.html')
     else:
         return redirect(url_for('login'))
-    
 
-@app.route('/photo/<int:photo_id>', methods=['GET'])
-def show_photo(photo_id):
+@app.route('/like/<int:photo_id>', methods=["POST"])
+def like(photo_id):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM images WHERE id = %s", (photo_id,))
-    photo_data = cursor.fetchone()
-    cursor.close()
-
-    if photo_data and 'image_data' in photo_data:
-        # Récupérer l'image en tant que base64
-        image_data = photo_data['image_data']
-        photo_data['image_data'] = base64.b64encode(image_data).decode('utf-8')
-
-        return render_template('photo.html', photo_data=photo_data)
-    else:
-        return "Photo not found"
-
-
-@app.route('/like/<int:image_id>', methods=['POST'])
-def like_image(image_id):
-    cursor = mysql.connection.cursor()
-    cursor.execute("UPDATE images SET likes = likes + 1 WHERE id = %s", (image_id,))
+    cursor.execute("UPDATE images SET likes = likes + 1 WHERE id = %s", (photo_id,))
     mysql.connection.commit()
-    cursor.close()
 
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT likes FROM images WHERE id = %s", (image_id,))
+    cursor.execute("SELECT likes FROM images WHERE id = %s", (photo_id,))
     likes = cursor.fetchone()['likes']
     cursor.close()
 
@@ -202,16 +170,11 @@ def comment_image(image_id):
         return jsonify({'comment': comment})
     else:
         return redirect(url_for('login'))
+
 @app.route('/logout')
 def logout():
-    # Supprimer toutes les données de la session de l'utilisateur
-    session.pop('user_id', None)
-    session.pop('user_first_name', None)
-    
-    flash('You have been successfully logged out.')
+    session.clear()
     return redirect(url_for('login'))
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
-
+    app.run(host='0.0.0.0', debug=True, port=5000)
