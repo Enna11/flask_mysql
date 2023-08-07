@@ -19,7 +19,7 @@ jobs:
         python-version: 3.8  
 
     - name: Build Docker image
-      run: docker build -t ena11/demo-app:latest .
+      run: docker build -t ena11/demo-app:1.1 .
       
     - name: Log in to Docker Hub
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
