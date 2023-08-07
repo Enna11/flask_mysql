@@ -19,9 +19,11 @@ jobs:
         python-version: 3.8  
 
     - name: Build Docker image
-      run: docker build -t flask-app:1.0 .
+      run: docker build -t ena11/demo-app:latest .
+      
+    - name: Log in to Docker Hub
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
       
     - name: Push Docker image
-      run: |
-        echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        docker push flask-app:1.0
+      run: docker push ena11/demo-app:latest
+
