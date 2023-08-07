@@ -19,7 +19,7 @@ jobs:
         python-version: 3.8  
 
     - name: Build Docker image
-      run: docker build -t flask-app:1.0 -f .github/Dockerfile .
+      run: docker build -t flask-app:1.0 .
       
     - name: Push Docker image
       run: |
