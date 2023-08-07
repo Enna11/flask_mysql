@@ -11,8 +11,7 @@ app = Flask(__name__)
 app.secret_key = "caircocoders-ednalan"
 
 # Configuration de la base de données MySQL
-app.config["MYSQL_DATABASE_HOST"] = 'mysql-service'
-
+app.config["MYSQL_HOST"] = 'mysql-service'
 app.config['MYSQL_USER'] = 'enna'
 app.config['MYSQL_PASSWORD'] = 'poiuytre'
 app.config['MYSQL_DB'] = 'enameli'

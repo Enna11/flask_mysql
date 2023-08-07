@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <title>Photo</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -35,7 +35,7 @@
     
 </head>
 <body>
-    <h1>Uploaded Photo</h1>
+    <h1> Photo téléchargée</h1>
     {% if 'file_name' in photo_data %}
     <img src="data:image/{{ photo_data['file_name'].split('.')[-1] }};base64,{{ photo_data['image_data'] }}" alt="Uploaded">
     <br>

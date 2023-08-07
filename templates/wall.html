@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Wall</title>
+    <title>Mur</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -85,11 +85,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Wall</h1>
-        <h3>Hello, {{ session['user_first_name'] }}!</h3>
+        <h1>Bienvenue au Mur</h1>
+        <h3>Bonjour, {{ session['user_first_name'] }}!</h3>
 
-        <a href="/upload">Upload a Photo</a>
-        <a href="/logout" class="logout-btn">Logout</a>
+        <a href="/upload">Télécharger une Photo</a>
+        <a href="/logout" class="logout-btn">Déconnexion</a>
         {% for photo in photos %}
             <div class="photo-container">
                 <img  src="data:image/{{ photo['file_name'].split('.')[-1] }};base64,{{ photo['image_data'] }}" alt="Photo">

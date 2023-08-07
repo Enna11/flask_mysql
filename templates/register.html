@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Register</title>
+    <title>Inscription</title>
     <link rel="stylesheet" type="text/css" href="static/uploads/css/style.css">
     <style>
         /* Styles pour les boutons */
@@ -52,29 +52,29 @@
 <body>
    
     <form method="POST" action="/register" class="form register-form">
-        <div id="heading">Register</div>
-        <label for="first-name">First Name</label>
-        <input type="text" id="first-name" name="first_name" required>
+        <div id="heading">Inscrption</div>
+        <label for="first-name"> Prénom</label>
+        <input type="text" id="first-name" name="prénom" required>
 
-        <label for="last-name">Last Name</label>
-        <input type="text" id="last-name" name="last_name" required>
+        <label for="last-name"> Nom de famille</label>
+        <input type="text" id="last-name" name="nom de famille" required>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <label for="email">Adresse e-mail</label>
+        <input type="email" id="email" name="Adresse e-mail" required>
 
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="mot de passe" required>
 
-        <label for="gender">Gender</label>
-        <select id="gender" name="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+        <label for="gender">Genre</label>
+        <select id="gender" name="Genre">
+            <option value="male">Homme</option>
+            <option value="female">Femme</option>
         </select><br>
 
-        <label for="dob">Date of Birth</label>
+        <label for="dob">Date de naissance</label>
         <input type="date" id="dob" name="dob" required>
 
-        <input type="submit" value="Register">
+        <input type="submit" value="S'inscrire">
     </form>
 </body>
 </html>

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
   <link rel="stylesheet" type="text/css" href="static/uploads/css/style.css">
 </head>
 <body>
   <div class="form">
-    <div id="heading">Login</div>
+    <div id="heading">Connexion</div>
     
 
-    <form method="POST" action="/login">
+    <form method="POST" action="/Connexion">
       <div class="field">
         <svg class="input-icon" viewBox="0 0 24 24">
           <path d="M0 0h24v24H0z" fill="none"/>
           <path d="M10 9v6h1l4-2-4-2v2H8V9h2z"/>
         </svg>
-        <input class="input-field" type="email" name="email" placeholder="Enter email">
+        <input class="input-field" type="email" name="Adresse e-mail" placeholder="Entrez une Adresse e-mail">
       </div>
 
       <section class="bg-stars">
@@ -29,17 +29,17 @@
           <path d="M0 0h24v24H0z" fill="none"/>
           <path d="M12 14.8L9.6 12 12 9.6l2.4 2.4L12 14.8zm2.4-9.6l-2.4-2.4L12 4.8 14.4 7l-2.4 2.4zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"/>
         </svg>
-        <input class="input-field" type="password" name="password" placeholder="Enter password">
+        <input class="input-field" type="password" name="mot de passe" placeholder="Entrez un mot de passe">
       </div>
 
       <div class="btn">
-        <button type="submit" class="button1">Sign in</button>
+        <button type="submit" class="button1">Se connecter</button>
       </div>
     </form>
 
     <p class="signup-link">
-      No account?
-      <a href="/register" class="up">Sign up!</a>
+      pas de compte?
+      <a href="/register" class="up">S'inscrire!</a>
     </p>
   </div>
 </body>
