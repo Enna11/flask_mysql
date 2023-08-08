@@ -47,4 +47,4 @@ jobs:
     - name: Test service URLs
       run: |
           minikube service list
-          minikube service flask-app
+          minikube service flask-service
