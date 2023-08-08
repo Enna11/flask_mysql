@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Deploy Flask app
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main  
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -18,14 +18,11 @@ jobs:
       with:
         python-version: 3.8  
 
-    - name: Build Docker image
-      run: docker build -t ena11/demo-app:1.1 .
-      
-    - name: Log in to Docker Hub
-      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
-      
-    - name: Push Docker image
-      run: docker push ena11/demo-app:1.1
+    - name: Build and Push Docker image
+      run: |
+        docker build -t ena11/demo-app:1.1 .
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
+        docker push ena11/demo-app:1.1
 
     - name: Start Minikube
       uses: medyagh/setup-minikube@master
@@ -33,18 +30,16 @@ jobs:
     - name: Try the cluster
       run: kubectl get pods -A
 
-    - name: Build Docker image
+    - name: Build Docker image for Minikube
       run: |
-          export SHELL=/bin/bash
-          eval $(minikube -p minikube docker-env)
-          docker build -f ./Dockerfile -t ena11/demo-app:1.1 .
-          echo -n "verifying images:"
-          docker images
+        export SHELL=/bin/bash
+        eval $(minikube -p minikube docker-env)
+        docker build -f ./Dockerfile -t ena11/demo-app:minikube .
 
     - name: Deploy to Minikube
       run: kubectl apply -f flaskapp-deployment.yaml
 
     - name: Test service URLs
       run: |
-          minikube service list
-          minikube service flask-service
+        minikube service list
+        minikube service flask-service
