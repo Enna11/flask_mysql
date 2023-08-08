@@ -46,3 +46,4 @@ jobs:
       run: |
         minikube service list
         minikube service flask-service
+        kubectl logs flaskapp-deployment-6959f699db-lk85z 
