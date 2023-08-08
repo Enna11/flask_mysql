@@ -37,7 +37,10 @@ jobs:
         docker build -f ./Dockerfile -t ena11/demo-app:minikube .
 
     - name: Deploy to Minikube
-      run: kubectl apply -f flaskapp-deployment.yaml
+      run: |
+            kubectl apply -f mysql-secret.yaml
+            kubectl apply -f mysql.yaml
+            kubectl apply -f flaskapp-deployment.yaml
 
     - name: Test service URLs
       run: |
