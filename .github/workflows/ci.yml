@@ -45,6 +45,6 @@ jobs:
     - name: Test service URLs
       run: |
         minikube service list
-        kubectl logs flaskapp-deployment-6959f699db-lk85z 
+        kubectl get pods
         minikube service flask-service
         kubectl logs flaskapp-deployment-6959f699db-lk85z 
