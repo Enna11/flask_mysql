@@ -1,0 +1,41 @@
+name: Docker Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker build -t your-image-name .
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker push your-image-name
+
+      - name: Deploy to EC2 via SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_USER: ec2-user
+          EC2_HOST: 13.38.112.40
+          DOCKER_IMAGE_NAME: ena11/demo-app:1.1
+        run: |
+          echo "$SSH_PRIVATE_KEY" > deploy_key
+          chmod 600 deploy_key
+
+          ssh -i deploy_key $EC2_USER@$EC2_HOST << EOF
+          
+            # Pull the  container
+            docker pull ena11/demo-app:1.1
+            kubectl apply -f flaskapp-deployment.yaml
+            echo " vous pouvez consulter votre application sur le port EC2_HOST:3000 "
+            
