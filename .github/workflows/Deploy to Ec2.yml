@@ -36,4 +36,4 @@ jobs:
             docker pull ena11/demo-app:1.1
             kubectl apply -f flaskapp-deployment.yaml
             echo "Vous pouvez consulter votre application sur le port $EC2_HOST:3000"
-EOF
+         EOF
