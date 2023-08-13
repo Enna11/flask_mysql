@@ -18,9 +18,9 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker build -t your-image-name .
+          docker build -t ena11/demo-app:1.1 .
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker push your-image-name
+          docker push ena11/demo-app:1.1
 
       - name: Deploy to EC2 via SSH
         env:
@@ -37,5 +37,5 @@ jobs:
             # Pull the  container
             docker pull ena11/demo-app:1.1
             kubectl apply -f flaskapp-deployment.yaml
-            echo " vous pouvez consulter votre application sur le port EC2_HOST:3000 $"
+            echo " vous pouvez consulter votre application sur le port  $EC2_HOST:3000 "
             
