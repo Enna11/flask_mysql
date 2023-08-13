@@ -32,7 +32,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > key.pem
           chmod 600 deploy_key
 
-          ssh -i deploy_key $EC2_USER@$EC2_HOST << EOF
+          ssh -i key.pem $EC2_USER@$EC2_HOST << EOF
           
             # Pull the  container
             docker pull ena11/demo-app:1.1
