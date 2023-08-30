@@ -1,42 +1,41 @@
 version: '3.8'
- 
+
 services:
   flask-app:
-    container_name: flask-app
-    image: flask-app:1.1
+    container_name: flask-app                # Nom du conteneur pour notre application Flask
+    image: flask-app:1.2                     # Utilise l'image construite de notre application
     environment:
-      MYSQL_DATABASE: enameli
-      MYSQL_USER: enna
-      MYSQL_PASSWORD: poiuytre
+      MYSQL_DATABASE: enameli                # Nom de la base de données MySQL
+      MYSQL_USER: enna                       # Nom d'utilisateur MySQL
+      MYSQL_PASSWORD: poiuytre               # Mot de passe de l'utilisateur MySQL
     ports:
-      - "5002:5000"
+      - "5002:5000"                          # Mappage de port de l'hôte à celui du conteneur
     networks:
-      - app-net
- 
+      - app-net                              # Associe ce service au réseau 'app-net'
+
   mysqldb:
-    container_name: mysqldb
-    image: mysql:latest
+    container_name: mysqldb                  # Nom du conteneur pour MySQL
+    image: mysql:latest                      # Utilise l'image officielle MySQL
     ports:
-      - "3306:3306"  
+      - "3306:3306"                           # Mappage de port de l'hôte à celui du conteneur MySQL
     environment:
-      MYSQL_ROOT_PASSWORD: iddirena
-      MYSQL_DATABASE: enameli
-      MYSQL_USER: enna
-      MYSQL_PASSWORD: poiuytre
+      MYSQL_ROOT_PASSWORD: iddirena           # Mot de passe root de MySQL
+      MYSQL_DATABASE: enameli                # Nom de la base de données MySQL
+      MYSQL_USER: enna                       # Nom d'utilisateur MySQL
+      MYSQL_PASSWORD: poiuytre               # Mot de passe de l'utilisateur MySQL
     networks:
-      - app-net
+      - app-net                              # Associe ce service au réseau 'app-net'
 
   phpmyadmin:
-    container_name: phpmyadmin
-    image: phpmyadmin:latest
+    container_name: phpmyaadmin               # Nom du conteneur pour phpMyAdmin
+    image: phpmyadmin:latest                 # Utilise l'image officielle phpMyAdmin
     links:
-      - mysqldb:db
+      - mysqldb:db                            # Établit une liaison avec le conteneur MySQL
     ports:
-      - "8080:80"
+      - "8080:80"                             # Mappage de port de l'hôte à celui du conteneur phpMyAdmin
     networks:
-      - app-net
-
+      - app-net                              # Associe ce service au réseau 'app-net'
 
 networks:
   app-net:
-    name: app-net
+    name: app-net                            # Définition du réseau 'app-net'

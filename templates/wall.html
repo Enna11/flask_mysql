@@ -37,7 +37,6 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-
         h3 {
             color: #333;
             margin-bottom: 10px;
@@ -51,7 +50,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .like-btn, .comment-btn {
+        .like-btn, .comment-btn, .report-btn {
             padding: 5px 10px;
             background-color: #007bff;
             color: #fff;
@@ -76,6 +75,7 @@
             align-items: center;
             gap: 10px;
         }
+        
         .logout-btn {
             position: absolute;
             top: 20px;
@@ -87,15 +87,15 @@
     <div class="container">
         <h1>Bienvenue au Mur</h1>
         <h3>Bonjour, {{ session['user_first_name'] }}!</h3>
-
-        <a href="/upload">Télécharger une Photo</a>
+        <a href="/upload">Charger une Photo</a>
         <a href="/logout" class="logout-btn">Déconnexion</a>
         {% for photo in photos %}
             <div class="photo-container">
-                <img  src="data:image/{{ photo['file_name'].split('.')[-1] }};base64,{{ photo['image_data'] }}" alt="Photo">
+                <img src="data:image/{{ photo['file_name'].split('.')[-1] }};base64,{{ photo['image_data'] }}" alt="Photo">
                 <br>
                 <br>
                 <button class="like-btn" data-photo-id="{{ photo['id'] }}">J'aime</button>
+                <button class="report-btn" data-toggle="modal" data-target="#reportModal-{{ photo['id'] }}">Signaler</button>
                 <span class="like-count" id="like-count-{{ photo['id'] }}">{{ photo['likes'] }}</span> likes<br>
 
                 <div class="comment-section" id="comment-section-{{ photo['id'] }}">
@@ -113,6 +113,38 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Modal de signalement -->
+    {% for photo in photos %}
+    <div class="modal fade" id="reportModal-{{ photo['id'] }}" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">Signaler une photo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/report/{{ photo['id'] }}" method="post">
+                        <div class="form-group">
+                            <label for="reason">Raison du signalement</label>
+                            <select class="form-control" id="reason" name="reason">
+                                <option value="contenu_indesirable">Contenu indésirable</option>
+                                <option value="violation">Violation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="details">Détails (facultatif)</label>
+                            <textarea class="form-control" id="details" name="details" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Signaler</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

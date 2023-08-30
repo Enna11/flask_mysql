@@ -1,3 +1,4 @@
+# Définition du déploiement de l'application Flask
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +6,7 @@ metadata:
   labels:
     app: flaskapp
 spec:
-  replicas: 2
+  replicas: 2 # Nombre de répliques de l'application à déployer
   selector:
     matchLabels:
       app: flaskapp
@@ -17,39 +18,38 @@ spec:
       containers:
         - name: flask-app
           image: flask-app:1.1
-          imagePullPolicy: Never
+          imagePullPolicy: Never # Politique pour tirer l'image, ici "Never" indique de ne pas la tirer s'il est déjà présent localement
           ports:
-            - containerPort: 5000
-          env:
-            
+            - containerPort: 5000 # Port sur lequel l'application écoute
+          env: # Variables d'environnement pour l'application
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mysqldb-secret
-                  key: mysql-root-password
+                  key: mysql-root-password # Utilisation d'un secret pour le mot de passe root MySQL
             - name: MYSQL_USER
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: mysqldb-secret
-                  key: mysql-user
+                  key: mysql-user # Utilisation d'un secret pour l'utilisateur MySQL
             - name: MYSQL_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: mysqldb-secret
-                  key: mysql-password
+                  key: mysql-password # Utilisation d'un secret pour le mot de passe de l'utilisateur MySQL
             - name: MYSQL_DATABASE
-              value: enameli
+              value: enameli # Nom de la base de données MySQL à utiliser
 ---
+# Définition du service pour l'application Flask
 apiVersion: v1
 kind: Service
 metadata:
   name: flask-service
 spec:
-  type: NodePort
+  type: NodePort # Type de service, ici "NodePort" expose le service sur un port accessible sur tous les nœuds du cluster
   ports:
     - port: 5000
       protocol: TCP
-      targetPort: 5000
+      targetPort: 5000 # Port cible vers lequel le trafic est redirigé
   selector:
-    app: flaskapp
-
+    app: flaskapp # Sélection des pods associés à ce service

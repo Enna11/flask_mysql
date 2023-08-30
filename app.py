@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = "caircocoders-ednalan"
 
 # Configuration de la base de données MySQL
-app.config["MYSQL_HOST"] = 'mysql-service'
+app.config["MYSQL_HOST"] = 'mysqldb'
 app.config['MYSQL_USER'] = 'enna'
 app.config['MYSQL_PASSWORD'] = 'poiuytre'
 app.config['MYSQL_DB'] = 'enameli'
@@ -69,7 +69,7 @@ def login():
             session['user_first_name'] = user['first_name']
             return redirect('/wall')
         else:
-            flash('Email ou mot de passe invalide')
+            flash('E-mail ou mot de passe invalide')
             return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -89,7 +89,7 @@ def register():
         mysql.connection.commit()
         cursor.close()
 
-        flash('Registration successful! Please log in.')
+        flash('Inscription réussie ! Veuillez vous connecter.')
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -144,17 +144,39 @@ def upload():
     else:
         return redirect(url_for('login'))
 
-@app.route('/like/<int:photo_id>', methods=["POST"])
-def like(photo_id):
-    cursor = mysql.connection.cursor()
-    cursor.execute("UPDATE images SET likes = likes + 1 WHERE id = %s", (photo_id,))
-    mysql.connection.commit()
+@app.route('/like/<int:image_id>', methods=['POST'])
+def like_image(image_id):
+    if 'user_id' in session:
+        user_id = session['user_id']
 
-    cursor.execute("SELECT likes FROM images WHERE id = %s", (photo_id,))
-    likes = cursor.fetchone()['likes']
-    cursor.close()
+        # Vérifier si l'utilisateur a déjà aimé cette photo
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM likes WHERE user_id = %s AND image_id = %s", (user_id, image_id))
+        existing_like = cursor.fetchone()
+        cursor.close()
 
-    return jsonify({'likes': likes})
+        if not existing_like:
+            # Ajouter le like à la base de données
+            cursor = mysql.connection.cursor()
+            cursor.execute("INSERT INTO likes (user_id, image_id) VALUES (%s, %s)", (user_id, image_id))
+            mysql.connection.commit()
+            cursor.close()
+
+            # Mettre à jour le nombre de likes pour la photo
+            cursor = mysql.connection.cursor()
+            cursor.execute("UPDATE images SET likes = likes + 1 WHERE id = %s", (image_id,))
+            mysql.connection.commit()
+            cursor.close()
+
+        # Récupérer le nombre total de likes après la mise à jour
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT likes FROM images WHERE id = %s", (image_id,))
+        likes = cursor.fetchone()['likes']
+        cursor.close()
+
+        return jsonify({'likes': likes})
+    else:
+        return jsonify({'erreur' : 'Vous devez être connecté pour aimer les photos.'}), 401
 
 @app.route('/comment/<int:image_id>', methods=['POST'])
 def comment_image(image_id):
@@ -170,10 +192,27 @@ def comment_image(image_id):
         return jsonify({'comment': comment})
     else:
         return redirect(url_for('login'))
+    
+@app.route('/report/<int:target_id>', methods=['POST'])
+def report(target_id):
+    if 'user_id' in session:
+        reason = request.form.get('reason')
+        details = request.form.get('details')
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO reports (user_id, target_id, reason, details) VALUES (%s, %s, %s, %s)",
+                       (session['user_id'], target_id, reason, details))
+        mysql.connection.commit()
+        cursor.close()
+
+        return jsonify({'message': 'Image signalée avec succès.'})
+    else:
+        return jsonify({'erreur': 'Vous devez être connecté pour signaler une image.'}), 401
 
 @app.route('/logout')
 def logout():
     session.clear()
+    flash('Vous avez été déconnecté avec succès')
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

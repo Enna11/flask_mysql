@@ -33,3 +33,13 @@ CREATE TABLE IF NOT EXISTS images (
   image_data longblob,
   PRIMARY KEY (id)
 ) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--- Table 'likes '---
+CREATE TABLE likes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    image_id INT NOT NULL,
+    UNIQUE (user_id, image_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (image_id) REFERENCES images(id)
+);

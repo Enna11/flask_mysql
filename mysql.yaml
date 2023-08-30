@@ -1,54 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysqldb-deployment
+  name: mysqldb-deployment  # Nom du déploiement de la base de données MySQL
   labels:
-    app: mysqldb
+    app: mysqldb  # Libellés associés au déploiement
 spec:
-  replicas: 1
+  replicas: 1  # Nombre de répliques/pods à créer
   selector:
     matchLabels:
-      app: mysqldb
+      app: mysqldb  # Sélection des pods avec ce libellé pour le déploiement
   template:
     metadata:
       labels:
-        app: mysqldb
+        app: mysqldb  # Libellés pour les pods
     spec:
       containers:
-      - name: mysql-service
-        image: mysql:latest
+      - name: mysql-service  # Nom du conteneur MySQL
+        image: mysql:latest  # Image Docker à utiliser
         ports:
-        - containerPort: 3306
+        - containerPort: 3306  # Port exposé par le conteneur MySQL
         env:
-        - name: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_ROOT_PASSWORD  # Nom de la variable d'environnement
           valueFrom:
             secretKeyRef:
-              name: mysqldb-secret
-              key: mysql-root-password
+              name: mysqldb-secret  # Nom du secret
+              key: mysql-root-password  # Clé du secret pour le mot de passe root MySQL
         - name: MYSQL_USER
           valueFrom: 
             secretKeyRef:
               name: mysqldb-secret
               key: mysql-user
-
         - name: MYSQL_PASSWORD
           valueFrom: 
             secretKeyRef:
               name: mysqldb-secret
               key: mysql-password
-
         - name: MYSQL_DATABASE
-          value: enameli
+          value: enameli  # Nom de la base de données MySQL à utiliser
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: mysql-service  # Nom du service pour la base de données MySQL
 spec:
   selector:
-    app: mysqldb
+    app: mysqldb  # Sélection des pods avec ce libellé pour le service
   ports:
     - protocol: TCP
       port: 3306
-      targetPort: 3306
+      targetPort: 3306  # Port cible vers lequel le trafic est redirigé

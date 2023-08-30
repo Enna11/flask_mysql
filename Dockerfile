@@ -1,19 +1,18 @@
-
+# On Utilise l'image de base Python 3
 FROM python:3
- 
-# Set the working directory in the container
+
+# On Définit le répertoire de travail dans le conteneur
 WORKDIR /app
- 
-# Copy the files of my application into the container
+
+# La Copie les fichiers de notre application dans le conteneur
 COPY . .
- 
-# Install Python dependencies from requirements.txt
- 
+
+# On installe les dépendances Python à partir de requirements.txt
 RUN apt install pkg-config
 RUN pip3 install --no-cache-dir -r requirements.txt -v
- 
-# Expose the port on which my Flask application listens
+
+# On Expose le port sur lequel notre application Flask écoute
 EXPOSE 5000
- 
-# Command to start the Flask application when the container is executed
+
+# Commande pour démarrer l'application Flask lorsque le conteneur est exécuté
 CMD ["python3", "app.py"]
