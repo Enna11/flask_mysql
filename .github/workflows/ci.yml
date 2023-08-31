@@ -1,39 +1,28 @@
-name: Docker Build and Deploy
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - main
+      - main  
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8  
 
-      - name: Build and Push Docker Image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker build -t ena11/demo-app:1.1 .
-          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker push ena11/demo-app:1.1
-
-      - name: Deploy to EC2 via SSH
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          EC2_USER: ec2-user
-          EC2_HOST: 13.38.112.40
-          DOCKER_IMAGE_NAME: ena11/demo-app:1.1
-        run: |
-          echo "$SSH_PRIVATE_KEY" > key.pem
-          chmod 600 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
-            # Pull the container
-            docker pull ena11/demo-app:1.1
-            kubectl apply -f flaskapp-deployment.yaml
-            echo "Vous pouvez consulter votre application sur le port $EC2_HOST:3000"
-          EOF
+    - name: Build Docker image
+      run: docker build -t ena11/demo-app:1.1 .
+      
+    - name: Log in to Docker Hub
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
+      
+    - name: Push Docker image
+      run: docker push ena11/demo-app:1.1
