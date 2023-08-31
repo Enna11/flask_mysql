@@ -3,7 +3,7 @@ version: '3.8'
 services:
   flask-app:
     container_name: flask-app                # Nom du conteneur pour notre application Flask
-    image: flask-app:1.2                     # Utilise l'image construite de notre application
+    image: flask-app:1.0                    # Utilise l'image construite de notre application
     environment:
       MYSQL_DATABASE: enameli                # Nom de la base de données MySQL
       MYSQL_USER: enna                       # Nom d'utilisateur MySQL
