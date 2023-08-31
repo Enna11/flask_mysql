@@ -1,0 +1,28 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8  
+
+    - name: Build Docker image
+      run: docker build -t ena11/demo-app:1.1 .
+      
+    - name: Log in to Docker Hub
+      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login docker.io -u ena11 --password-stdin
+      
+    - name: Push Docker image
+      run: docker push ena11/demo-app:1.1
