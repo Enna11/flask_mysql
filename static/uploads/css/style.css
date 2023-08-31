@@ -11,7 +11,7 @@ body {
 .signup-link {
   text-align: center;
   margin-top: 1.5em;
-  color: black; /* Set the color to white */
+  color: rgb(241, 239, 236); /* Set the color to white */
 }
 
 .signup-link a {
